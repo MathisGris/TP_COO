@@ -13,8 +13,27 @@ models.ForeignKey(
     # blank=True, null=True, related_name="+",
 )"""
 
+class Localisation(models.Model):
+    """
+    Classe représentant la localisation
 
-class MatierePremiere:
+    Attributs:
+        nom(str):
+        prix(float): en milliers d'euros
+        localisation(object):
+    Methodes:
+
+    """
+
+    nom = models.CharField(max_length=100)
+    taxes = models.CharField(max_length=100)
+    prix_m2 = models.FloatField()
+
+    def __str__(self):
+        return f"{self.nom}, taxes : {self.taxes}, prix au m2 : {self.prix_m2}"
+
+
+class MatierePremiere(models.Model):
     """
     Classe représentant un produit
 
@@ -32,9 +51,8 @@ class MatierePremiere:
     emprise = models.FloatField()
 
     def __str__(self):
-        return f"{self.nom}, stock : {self.remuneration} unités, emprise au sol : {self.emprise} m2"
+        return f"{self.nom}, stock : {self.stock} unités, emprise au sol : {self.emprise} m2"
 
-    pass
 
 
 class QuantiteMatierePremiere(models.Model):
@@ -84,13 +102,20 @@ class ApprovisionnementMatierePremiere(QuantiteMatierePremiere):
     Methodes:
 
     """
+    localisation = models.ForeignKey(
+        Localisation,
+        on_delete=models.PROTECT,
+    )
+    prix_unitaire = models.FloatField()
+    delais = models.FloatField()
+
 
     def __str__(self):
         return f"Il reste {self.quantite} de {self.matiere_premiere.nom} rangés à {self.localisation.nom} pour le prix de {self.prix_unitaire}. On pourra être réaprovisionnés sous {self.delais} jours"
         pass
 
 
-class Metier:
+class Metier(models.Model):
     """
     Classe représentant un metier
 
@@ -108,7 +133,7 @@ class Metier:
         return f"{self.nom}, remuneration : {self.remuneration}"
 
 
-class RessourceHumaine:
+class RessourceHumaine(models.Model):
     """
     Classe représentant des ressources inhumaines
 
@@ -128,28 +153,7 @@ class RessourceHumaine:
     def __str__(self):
         return f"{self.metier}, quantite : {self.quantite}"
 
-
-class Localisation:
-    """
-    Classe représentant la localisation
-
-    Attributs:
-        nom(str):
-        prix(float): en milliers d'euros
-        localisation(object):
-    Methodes:
-
-    """
-
-    nom = models.CharField(max_length=100)
-    taxes = models.CharField(max_length=100)
-    prix_m2 = models.FloatField()
-
-    def __str__(self):
-        return f"{self.nom}, taxes : {self.taxes}, prix au m2 : {self.prix_m2}"
-
-
-class Energie:
+class Energie(models.Model):
     """
     Classe représentant l'énergie
 
@@ -173,7 +177,7 @@ class Energie:
         return f"{self.nom}, prix : {self.prix}, localisation : {self.localisation}"
 
 
-class DebitEnergie:
+class DebitEnergie(models.Model):
     """
     Classe représentant le débit d'énergie
 
@@ -195,7 +199,7 @@ class DebitEnergie:
         return f"debit : {self.debit}, {self.energie}"
 
 
-class Local:
+class Local(models.Model):
     """
     Classe représentant un lieu de travail
     Attributs:
@@ -218,7 +222,7 @@ class Local:
         return f"{self.nom}, {self.localisation}, surface : {self.surface}"
 
 
-class Produit:
+class Produit(models.Model):
     """
     Classe représentant un produit
 
@@ -247,7 +251,7 @@ class Produit:
         return f"{self.nom}, prix de vente : {self.prix_de_vente}, quantite : {self.quantite}, emprise : {self.emprise}"
 
 
-class Machine:
+class Machine(models.Model):
     nom = models.CharField(max_length=100)
     prix_achat = models.FloatField()
     cout_maintenance = models.FloatField()
@@ -265,7 +269,7 @@ class Machine:
         return f"{self.nom}, prix d'achat : {self.prix_achat}, cout de maintenance : {self.cout_maintenance}, debit : {self.debit}, surface : {self.surface}, taux d utilisation : {self.taux_utilisation}, local : {self.local}, operateurs : {self.operateurs}"
 
 
-class Fabrication:
+class Fabrication(models.Model):
     produit = models.ForeignKey(
         Produit,
         on_delete=models.PROTECT,
