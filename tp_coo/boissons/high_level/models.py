@@ -239,7 +239,7 @@ class Produit(models.Model):
 
     nom = models.CharField(max_length=100)
     prix_de_vente = models.FloatField()
-    quantité = models.IntegerField()
+    quantite = models.IntegerField()
     emprise = models.FloatField()
     local = models.ForeignKey(
         Local,
@@ -275,7 +275,7 @@ class Fabrication(models.Model):
         on_delete=models.PROTECT,
         # blank=True, null=True, related_name="+",
     )
-    utilisations_matiere_premiere = models.ManyToManyField(UtilisationMatierePremiere)
+    utilisation_matiere_premiere = models.ManyToManyField(UtilisationMatierePremiere)
     machines = models.ManyToManyField(Machine)
     ressources_humaines = models.ManyToManyField(RessourceHumaine)
 
