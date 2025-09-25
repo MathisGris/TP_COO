@@ -114,6 +114,13 @@ class ApprovisionnementMatierePremiere(QuantiteMatierePremiere):
         return f"Il reste {self.quantite} de {self.matiere_premiere.nom} rangés à {self.localisation.nom} pour le prix de {self.prix_unitaire}. On pourra être réaprovisionnés sous {self.delais} jours"
         pass
 
+    def costs(self):
+        """
+        
+        """
+        cost = self.matiere_premiere.stock * self.prix_unitaire
+        return cost
+
 
 class Metier(models.Model):
     """
@@ -152,6 +159,14 @@ class RessourceHumaine(models.Model):
 
     def __str__(self):
         return f"{self.metier}, quantite : {self.quantite}"
+
+    def costs(self):
+        """
+        
+        """
+        cost = self.quantite * self.metier.remuneration
+        return cost
+
 
 class Energie(models.Model):
     """
@@ -198,6 +213,13 @@ class DebitEnergie(models.Model):
     def __str__(self):
         return f"debit : {self.debit}, {self.energie}"
 
+    def costs(self):
+        """
+        
+        """
+        cost = self.debit * self.energie.prix
+        return cost
+
 
 class Local(models.Model):
     """
@@ -221,6 +243,16 @@ class Local(models.Model):
     def __str__(self):
         return f"{self.nom}, {self.localisation}, surface : {self.surface}"
 
+    def costs(self):
+        """
+        
+        """
+        cost = self.surface * self.localisation.prix_m2
+        for m in self.machine_set.all():
+            cost += m.costs()
+        for am in self.localisation.approvisionnementmatierepremiere_set.all():
+            cost += am.costs()
+        return cost
 
 class Produit(models.Model):
     """
@@ -268,6 +300,12 @@ class Machine(models.Model):
     def __str__(self):
         return f"{self.nom}, prix d'achat : {self.prix_achat}, cout de maintenance : {self.cout_maintenance}, debit : {self.debit}, surface : {self.surface}, taux d utilisation : {self.taux_utilisation}, local : {self.local}, operateurs : {self.operateurs}"
 
+    def costs(self):
+        """
+        
+        """
+        cost = self.prix_achat + self.cout_maintenance 
+        return cost
 
 class Fabrication(models.Model):
     produit = models.ForeignKey(
