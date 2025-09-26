@@ -2,6 +2,7 @@
 
 from django.views.generic import DetailView, ListView
 from .models import *
+from django.http import JsonResponse
 
 
 
@@ -15,7 +16,8 @@ class LocalDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        str = self.object.json()
+        return JsonResponse(self.object.json())
 
 class LocalisationListView(ListView):
     model = Localisation
@@ -27,7 +29,7 @@ class LocalisationDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class FabricationDetailView(DetailView):
     model = Fabrication
@@ -36,7 +38,7 @@ class FabricationDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class FabricationListView(ListView):
     model = Fabrication
@@ -48,7 +50,7 @@ class RessourceHumaineDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class RessourceHumaineListView(ListView):
     model = RessourceHumaine
@@ -60,7 +62,7 @@ class MachineDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class MachineListView(ListView):
     model = Machine
@@ -72,7 +74,7 @@ class MetierDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class MetierListView(ListView):
     model = Metier
@@ -84,7 +86,7 @@ class MatierePremiereDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class MatierePremiereListView(ListView):
     model = MatierePremiere
@@ -96,7 +98,7 @@ class ApprovisionnementMatierePremiereDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class ApprovisionnementMatierePremiereListView(ListView):
     model = ApprovisionnementMatierePremiere
@@ -108,7 +110,7 @@ class UtilisationMatierePremiereDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class UtilisationMatierePremiereListView(ListView):
     model = UtilisationMatierePremiere
@@ -120,7 +122,7 @@ class EnergieDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class EnergieListView(ListView):
     model = Energie
@@ -132,7 +134,7 @@ class DebitEnergieDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class DebitEnergieListView(ListView):
     model = DebitEnergie
@@ -144,7 +146,7 @@ class ProduitDetailView(DetailView):
         """
         
         """
-        return JsonResponse(model.json())
+        return JsonResponse(self.object.json())
 
 class ProduitListView(ListView):
     model = Produit

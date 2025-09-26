@@ -37,7 +37,12 @@ class Localisation(models.Model):
         """
         
         """
-        return f'"nom":{self.nom},\n "taxes":{self.taxes},\n "prix_m2":{self.prix_m2}'
+        json_dic = {
+            "nom": self.nom,
+            "taxes": self.taxes,
+            "prix_m2": self.prix_m2
+        }
+        return json_dic
 
 
 class MatierePremiere(models.Model):
@@ -64,7 +69,12 @@ class MatierePremiere(models.Model):
         """
         
         """
-        return f'"nom":{self.nom},\n "stock":{self.stock},\n "emprise":{self.emprise}'
+        json_dic = {
+            "nom": self.nom,
+            "stock": self.stock,
+            "emprise": self.emprise
+        }
+        return json_dic
 
 
 
@@ -105,7 +115,11 @@ class UtilisationMatierePremiere(QuantiteMatierePremiere):
         """
         
         """
-        return f'"quantite":{self.quantite},\n "matiere_premiere":{self.matiere_premiere.json()}'
+        json_dic = {
+            "quantite": self.quantite,
+            "matiere_premiere": self.matiere_premiere.nom
+        }
+        return json_dic
 
 
 class ApprovisionnementMatierePremiere(QuantiteMatierePremiere):
@@ -144,7 +158,12 @@ class ApprovisionnementMatierePremiere(QuantiteMatierePremiere):
         """
         
         """
-        return f'"localisation":{self.localisation.json()},\n "prix_unitaire":{self.prix_unitaire},\n "delais":{self.delais}'
+        json_dic = {
+            "localisation": self.localisation.nom,
+            "prix_unitaire": self.prix_unitaire,
+            "delais": self.delais
+        }
+        return json_dic
 
 
 class Metier(models.Model):
@@ -168,7 +187,11 @@ class Metier(models.Model):
         """
         
         """
-        return f'"nom":{self.nom},\n "remuneration":{self.remuneration}'
+        json_dic = {
+            "nom": self.nom,
+            "remuneration": self.remuneration
+        }
+        return json_dic
 
 
 class RessourceHumaine(models.Model):
@@ -202,7 +225,11 @@ class RessourceHumaine(models.Model):
         """
         
         """
-        return f'"metier":{self.metier.json()},\n "quantite":{self.quantite}'
+        json_dic = {
+            "metier": self.metier.nom,
+            "quantite": self.quantite
+        }
+        return json_dic
 
 
 class Energie(models.Model):
@@ -232,7 +259,12 @@ class Energie(models.Model):
         """
         
         """
-        return f'"nom":{self.nom},\n "prix":{self.prix},\n "localisation":{self.localisation.json()}'
+        json_dic = {
+            "nom": self.nom,
+            "prix": self.prix,
+            "localisation": self.localisation.nom
+        }
+        return json_dic
 
 class DebitEnergie(models.Model):
     """
@@ -266,7 +298,11 @@ class DebitEnergie(models.Model):
         """
         
         """
-        return f'"debit":{self.debit},\n "energie":{self.energie.json()}'
+        json_dic = {
+            "debit": self.debit,
+            "energie": self.energie.nom
+        }
+        return json_dic
 
 class Local(models.Model):
     """
@@ -305,7 +341,12 @@ class Local(models.Model):
         """
         
         """
-        return f'"nom":{self.nom},\n "localisation":{self.localisation.json()},\n "surface":{self.surface}'
+        json_dic = {
+            "nom":self.nom,
+            "localisation":self.localisation.nom,
+            "surface":self.surface
+        }
+        return json_dic
 
 class Produit(models.Model):
     """
@@ -339,7 +380,14 @@ class Produit(models.Model):
         """
         
         """
-        return f'["nom":{self.nom},\n "prix_de_vente":{self.prix_de_vente},\n "quantite":{self.quantite},\n "emprise":{self.emprise},\n "local":{self.local.json()}]'
+        json_dic = {
+            "nom": self.nom,
+            "prix_de_vente": self.prix_de_vente,
+            "quantite": self.quantite,
+            "emprise": self.emprise,
+            "local": self.local.nom
+        }
+        return json_dic
 
 class Machine(models.Model):
     nom = models.CharField(max_length=100)
@@ -369,10 +417,17 @@ class Machine(models.Model):
         """
         
         """
-        for op in self.operateurs:
-            operateurs_tot += op.json()
+        json_dic = {
+            "nom": self.nom,
+            "prix_achat": self.prix_achat,
+            "cout_maintenance": self.cout_maintenance,
+            "debit": self.debit,
+            "surface": self.surface,
+            "taux_utilisation": self.taux_utilisation,
+            "local": self.local.nom
+        }
     
-        return  f'["nom":{self.nom},\n "prix_achat":{self.prix_achat},\n "cout_maintenance":{self.cout_maintenance},\n "debit":{self.debit},\n "surface":{self.surface},\n "taux_utilisation":{self.taux_utilisation},\n "local":{self.local.json()},\n "operateurs":[{operateurs_tot}]]'
+        return  json_dic
 
 class Fabrication(models.Model):
     produit = models.ForeignKey(
@@ -398,7 +453,7 @@ class Fabrication(models.Model):
             m_json_tot += m.json()
         for rh in ressources_humaines:
             rh_json_tot += rh.json()    
-        return f'[{produit_json}\n,{rh_json_tot}\n,{m_json_tot}\n,{ump_json_tot}]'
+        return {"\"produit\"":{self.produit.json()}, "\"ressources_humaines\"":{rh_json_tot}, "\"machines\"":{m_json_tot}, "\"utilisation_matiere_premiere\"":{ump_json_tot} }
 
 
         
